@@ -27,6 +27,12 @@ export function Post({ author, content, publishedAt }) {
   function handleNewCommentChange(event) {
     setNewCommentText(event.target.value);
   }
+  function deleteComment(commentToDelete) {
+    const commentsWithoutDeletedOne = comments.filter((comment) => {
+      return comment !== commentToDelete;
+    });
+    setComments(commentsWithoutDeletedOne);
+  }
 
   return (
     <article className={styles.post}>
@@ -46,10 +52,11 @@ export function Post({ author, content, publishedAt }) {
       </header>
       <div className={styles.content}>
         {content.map((item) => {
-          if (item.type === 'paragraph') return <p>{item.content}</p>;
+          if (item.type === 'paragraph')
+            return <p key={item.content}>{item.content}</p>;
           else if (item.type === 'link')
             return (
-              <p>
+              <p key={item.content}>
                 <a href='#'>{item.content}</a>
               </p>
             );
@@ -70,7 +77,13 @@ export function Post({ author, content, publishedAt }) {
 
       <div className={styles.commentList}>
         {comments.map((comment) => {
-          return <Comment key={comment} content={comment} />;
+          return (
+            <Comment
+              key={comment}
+              content={comment}
+              onDeleteComment={deleteComment}
+            />
+          );
         })}
       </div>
     </article>
